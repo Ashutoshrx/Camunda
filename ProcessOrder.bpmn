@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_16g64lw" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.2.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="process_order_managing" name="Process Order Managing" isExecutable="true">
+    <bpmn:sequenceFlow id="Flow_0a4a5vi" sourceRef="StartEvent_1" targetRef="Activity_1j0dgtd" />
+    <bpmn:sequenceFlow id="Flow_1hnhezc" sourceRef="Activity_1j0dgtd" targetRef="Event_03jie7u" />
+    <bpmn:sequenceFlow id="Flow_1qp3lcf" sourceRef="Event_03jie7u" targetRef="Activity_159gnq6" />
+    <bpmn:endEvent id="Event_16d6o9d">
+      <bpmn:incoming>Flow_0jolr82</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0jolr82" sourceRef="Activity_159gnq6" targetRef="Event_16d6o9d" />
+    <bpmn:startEvent id="StartEvent_1" name="Order Recieved">
+      <bpmn:outgoing>Flow_0a4a5vi</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_148rchj" messageRef="Message_35afjdt" />
+    </bpmn:startEvent>
+    <bpmn:scriptTask id="Activity_1j0dgtd" name="Send Order Confirmation" scriptFormat="groovy">
+      <bpmn:incoming>Flow_0a4a5vi</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hnhezc</bpmn:outgoing>
+      <bpmn:script>println("Dear ${customerName}, your order with order id ${orderId} for product ${productName} has been received");</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Activity_159gnq6" name="Ship Order" scriptFormat="groovy">
+      <bpmn:incoming>Flow_1qp3lcf</bpmn:incoming>
+      <bpmn:outgoing>Flow_0jolr82</bpmn:outgoing>
+      <bpmn:script>println("Dear ${customerName}, your payment ${paymentAmount} INR has been received and order with order id ${orderId} for the product ${productName} has been shipped");</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:intermediateCatchEvent id="Event_03jie7u" name="Payment Recieved">
+      <bpmn:incoming>Flow_1hnhezc</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qp3lcf</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1fl1gtk" messageRef="Message_17l0v04" />
+    </bpmn:intermediateCatchEvent>
+  </bpmn:process>
+  <bpmn:message id="Message_35afjdt" name="Message_order_received" />
+  <bpmn:message id="Message_17l0v04" name="Message_payment_received" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="process_order_managing">
+      <bpmndi:BPMNEdge id="Flow_0jolr82_di" bpmnElement="Flow_0jolr82">
+        <di:waypoint x="630" y="117" />
+        <di:waypoint x="692" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qp3lcf_di" bpmnElement="Flow_1qp3lcf">
+        <di:waypoint x="468" y="117" />
+        <di:waypoint x="530" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hnhezc_di" bpmnElement="Flow_1hnhezc">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="432" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0a4a5vi_di" bpmnElement="Flow_0a4a5vi">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_16d6o9d_di" bpmnElement="Event_16d6o9d">
+        <dc:Bounds x="692" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_05jqcwm_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="158" y="142" width="78" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1l5c6q8_di" bpmnElement="Activity_1j0dgtd">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1gpm4em_di" bpmnElement="Activity_159gnq6">
+        <dc:Bounds x="530" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0is0wam_di" bpmnElement="Event_03jie7u">
+        <dc:Bounds x="432" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="427" y="142" width="46" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

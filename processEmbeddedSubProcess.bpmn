@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1edpg77" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.2.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="Process_19wnmhg" name="Process Embedded SubProcess" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0luyxg0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0luyxg0" sourceRef="StartEvent_1" targetRef="Activity_0k6ps5m" />
+    <bpmn:sequenceFlow id="Flow_05gn1e4" sourceRef="Activity_0k6ps5m" targetRef="Activity_0isjm1p" />
+    <bpmn:subProcess id="Activity_0isjm1p" name="Order Procurement">
+      <bpmn:incoming>Flow_05gn1e4</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ravhht</bpmn:outgoing>
+      <bpmn:startEvent id="Event_02ca6kj">
+        <bpmn:outgoing>Flow_1hnbw0l</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:sequenceFlow id="Flow_1hnbw0l" sourceRef="Event_02ca6kj" targetRef="Activity_0zj5m5p" />
+      <bpmn:exclusiveGateway id="Gateway_033tr6b">
+        <bpmn:incoming>Flow_06tlww1</bpmn:incoming>
+        <bpmn:outgoing>Flow_1qspuno</bpmn:outgoing>
+        <bpmn:outgoing>Flow_15ax8ju</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_06tlww1" sourceRef="Activity_0zj5m5p" targetRef="Gateway_033tr6b" />
+      <bpmn:sequenceFlow id="Flow_1qspuno" name="Shipped" sourceRef="Gateway_033tr6b" targetRef="Event_1m17965">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!late}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_15ax8ju" name="late shipped" sourceRef="Gateway_033tr6b" targetRef="Event_1n7tm24">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${late}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_14v9t2c" sourceRef="Event_1n7tm24" targetRef="Activity_0zj5m5p" />
+      <bpmn:userTask id="Activity_0zj5m5p" name="Product Shipping" camunda:assignee="demo">
+        <bpmn:extensionElements>
+          <camunda:formData>
+            <camunda:formField id="name" label="Product Name" type="string">
+              <camunda:validation>
+                <camunda:constraint name="readonly" config="true" />
+              </camunda:validation>
+            </camunda:formField>
+            <camunda:formField id="price" label="Product price" type="long">
+              <camunda:validation>
+                <camunda:constraint name="readonly" config="true" />
+              </camunda:validation>
+            </camunda:formField>
+            <camunda:formField id="late" label="Is it a late shipment?" type="boolean" />
+          </camunda:formData>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_1hnbw0l</bpmn:incoming>
+        <bpmn:incoming>Flow_14v9t2c</bpmn:incoming>
+        <bpmn:outgoing>Flow_06tlww1</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:endEvent id="Event_1m17965" name="shipped">
+        <bpmn:incoming>Flow_1qspuno</bpmn:incoming>
+        <bpmn:escalationEventDefinition id="EscalationEventDefinition_0bckfol" escalationRef="Escalation_29eblsg" />
+      </bpmn:endEvent>
+      <bpmn:intermediateThrowEvent id="Event_1n7tm24">
+        <bpmn:incoming>Flow_15ax8ju</bpmn:incoming>
+        <bpmn:outgoing>Flow_14v9t2c</bpmn:outgoing>
+        <bpmn:escalationEventDefinition id="EscalationEventDefinition_0ffehqf" escalationRef="Escalation_25m27j7" />
+      </bpmn:intermediateThrowEvent>
+    </bpmn:subProcess>
+    <bpmn:endEvent id="Event_1q416gm">
+      <bpmn:incoming>Flow_0ravhht</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0ravhht" sourceRef="Activity_0isjm1p" targetRef="Event_1q416gm" />
+    <bpmn:sequenceFlow id="Flow_0w4lb33" sourceRef="Event_1ahjyqd" targetRef="Activity_1n0f9e8" />
+    <bpmn:endEvent id="Event_1k4spwe">
+      <bpmn:incoming>Flow_1efyzau</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1efyzau" sourceRef="Activity_1n0f9e8" targetRef="Event_1k4spwe" />
+    <bpmn:sequenceFlow id="Flow_0wcpdv2" sourceRef="Event_0ret3ds" targetRef="Activity_1n34iyd" />
+    <bpmn:endEvent id="Event_0096j3j">
+      <bpmn:incoming>Flow_1kibru7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1kibru7" sourceRef="Activity_1n34iyd" targetRef="Event_0096j3j" />
+    <bpmn:userTask id="Activity_0k6ps5m" name="Order Product" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="name" label="Enter the product Name" type="string">
+            <camunda:validation />
+          </camunda:formField>
+          <camunda:formField id="price" label="Enter the product Price" type="long" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0luyxg0</bpmn:incoming>
+      <bpmn:outgoing>Flow_05gn1e4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:scriptTask id="Activity_1n0f9e8" name="Late shipment notification" scriptFormat="groovy">
+      <bpmn:incoming>Flow_0w4lb33</bpmn:incoming>
+      <bpmn:outgoing>Flow_1efyzau</bpmn:outgoing>
+      <bpmn:script>println("\nYour product ${name} has been delayed");</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Activity_1n34iyd" name="Shipment notification" scriptFormat="groovy">
+      <bpmn:incoming>Flow_0wcpdv2</bpmn:incoming>
+      <bpmn:outgoing>Flow_1kibru7</bpmn:outgoing>
+      <bpmn:script>println("\nYour product ${name} has been shipped with amount ${price}");</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:boundaryEvent id="Event_1ahjyqd" attachedToRef="Activity_0isjm1p">
+      <bpmn:outgoing>Flow_0w4lb33</bpmn:outgoing>
+      <bpmn:escalationEventDefinition id="EscalationEventDefinition_06h9e5p" escalationRef="Escalation_25m27j7" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_0ret3ds" attachedToRef="Activity_0isjm1p">
+      <bpmn:outgoing>Flow_0wcpdv2</bpmn:outgoing>
+      <bpmn:escalationEventDefinition id="EscalationEventDefinition_0kmjieq" escalationRef="Escalation_29eblsg" />
+    </bpmn:boundaryEvent>
+  </bpmn:process>
+  <bpmn:escalation id="Escalation_29eblsg" name="ship_product" escalationCode="ship_product" />
+  <bpmn:escalation id="Escalation_25m27j7" name="late_ship" escalationCode="late_ship" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_19wnmhg">
+      <bpmndi:BPMNEdge id="Flow_1kibru7_di" bpmnElement="Flow_1kibru7">
+        <di:waypoint x="810" y="470" />
+        <di:waypoint x="852" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wcpdv2_di" bpmnElement="Flow_0wcpdv2">
+        <di:waypoint x="760" y="388" />
+        <di:waypoint x="760" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1efyzau_di" bpmnElement="Flow_1efyzau">
+        <di:waypoint x="590" y="470" />
+        <di:waypoint x="632" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0w4lb33_di" bpmnElement="Flow_0w4lb33">
+        <di:waypoint x="540" y="388" />
+        <di:waypoint x="540" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ravhht_di" bpmnElement="Flow_0ravhht">
+        <di:waypoint x="900" y="175" />
+        <di:waypoint x="962" y="175" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05gn1e4_di" bpmnElement="Flow_05gn1e4">
+        <di:waypoint x="320" y="177" />
+        <di:waypoint x="380" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0luyxg0_di" bpmnElement="Flow_0luyxg0">
+        <di:waypoint x="168" y="177" />
+        <di:waypoint x="220" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="132" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0mwqf7n_di" bpmnElement="Activity_0isjm1p" isExpanded="true">
+        <dc:Bounds x="380" y="70" width="520" height="300" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_14v9t2c_di" bpmnElement="Flow_14v9t2c">
+        <di:waypoint x="550" y="272" />
+        <di:waypoint x="550" y="217" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15ax8ju_di" bpmnElement="Flow_15ax8ju">
+        <di:waypoint x="680" y="202" />
+        <di:waypoint x="680" y="290" />
+        <di:waypoint x="568" y="290" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="665" y="243" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qspuno_di" bpmnElement="Flow_1qspuno">
+        <di:waypoint x="705" y="177" />
+        <di:waypoint x="762" y="177" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="713" y="159" width="41" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06tlww1_di" bpmnElement="Flow_06tlww1">
+        <di:waypoint x="600" y="177" />
+        <di:waypoint x="655" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hnbw0l_di" bpmnElement="Flow_1hnbw0l">
+        <di:waypoint x="448" y="177" />
+        <di:waypoint x="500" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_02ca6kj_di" bpmnElement="Event_02ca6kj">
+        <dc:Bounds x="411.66666666666674" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_033tr6b_di" bpmnElement="Gateway_033tr6b" isMarkerVisible="true">
+        <dc:Bounds x="655" y="152" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1h6ynk4_di" bpmnElement="Activity_0zj5m5p">
+        <dc:Bounds x="500" y="137" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0qsvayp_di" bpmnElement="Event_1m17965">
+        <dc:Bounds x="762" y="159" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="761" y="202" width="39" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0r3sjwr_di" bpmnElement="Event_1n7tm24">
+        <dc:Bounds x="532" y="272" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1q416gm_di" bpmnElement="Event_1q416gm">
+        <dc:Bounds x="962" y="157" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1k4spwe_di" bpmnElement="Event_1k4spwe">
+        <dc:Bounds x="632" y="452" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0096j3j_di" bpmnElement="Event_0096j3j">
+        <dc:Bounds x="852" y="452" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0qcz3z8_di" bpmnElement="Activity_0k6ps5m">
+        <dc:Bounds x="220" y="137" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lnh4pb_di" bpmnElement="Activity_1n0f9e8">
+        <dc:Bounds x="490" y="430" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0hw0cw8_di" bpmnElement="Activity_1n34iyd">
+        <dc:Bounds x="710" y="430" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1fqzhr9_di" bpmnElement="Event_0ret3ds">
+        <dc:Bounds x="742" y="352" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ypdoi9_di" bpmnElement="Event_1ahjyqd">
+        <dc:Bounds x="522" y="352" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

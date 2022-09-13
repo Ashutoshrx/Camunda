@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_02fnp48" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.2.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:collaboration id="ProcessPaymentInvoice">
+    <bpmn:participant id="Participant_17p7efa" name="Process Payment Invoice" processRef="Process_0zv9p2b" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_0zv9p2b" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_0h2fph8">
+      <bpmn:lane id="Lane_1r5igmh" name="Secretary">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1e5zsn4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1lszwv5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1iy91ya</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_03t8byg" name="Requestor">
+        <bpmn:flowNodeRef>Gateway_1o42uda</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0b3iyfw</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0ml3y92</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1rng4jh</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1i0z6i3</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="invoiceNo" label="Invoice Number" type="string">
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="itemDes" label="Item Description" type="string">
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="quantity" label="Quantity" type="long">
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="billAmount" label="Bill Amount" type="long">
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_091bjmu</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="Gateway_1o42uda">
+      <bpmn:incoming>Flow_0lys0ey</bpmn:incoming>
+      <bpmn:outgoing>Flow_0mey2xc</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1f4wn8q</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="Event_0b3iyfw">
+      <bpmn:incoming>Flow_0g42zhm</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_1e5zsn4">
+      <bpmn:incoming>Flow_09k71p3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Activity_1lszwv5" name="Receive Invoice" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="invoiceNo" label="Invoice Number" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="itemDes" label="Item Description" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="quantity" label="Quanitity" type="long">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="billAmount" label="Bill Amount" type="long">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_091bjmu</bpmn:incoming>
+      <bpmn:outgoing>Flow_0bhpfjv</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:scriptTask id="Activity_1iy91ya" name="Invoice rejected" scriptFormat="groovy">
+      <bpmn:incoming>Flow_1f4wn8q</bpmn:incoming>
+      <bpmn:outgoing>Flow_09k71p3</bpmn:outgoing>
+      <bpmn:script>println("\nThe invoice number {invoiceNo} has been declined...");</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:userTask id="Activity_0ml3y92" name="Approve Invoice" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="invoiceNo" label="Invoice Number" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="billAmount" label="Bill Amount" type="long">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="isApproved" label="Do you want to approve?" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0bhpfjv</bpmn:incoming>
+      <bpmn:outgoing>Flow_0lys0ey</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_1rng4jh" name="Process Payment" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="invoiceNo" label="Invoice Number" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="itemDes" label="Item Description" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0mey2xc</bpmn:incoming>
+      <bpmn:outgoing>Flow_0s5ccy1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateThrowEvent id="Event_1i0z6i3" name="Inititate Payment Process Singal Intermediate">
+      <bpmn:incoming>Flow_0s5ccy1</bpmn:incoming>
+      <bpmn:outgoing>Flow_0g42zhm</bpmn:outgoing>
+      <bpmn:signalEventDefinition id="SignalEventDefinition_02w19dg" signalRef="Signal_3oms1k5">
+        <bpmn:extensionElements>
+          <camunda:in source="invoiceNo" target="invoiceNo" />
+          <camunda:in source="itemDes" target="itemDes" />
+          <camunda:in source="quantity" target="quantity" />
+          <camunda:in source="billAmount" target="billAmount" />
+        </bpmn:extensionElements>
+      </bpmn:signalEventDefinition>
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="Flow_091bjmu" sourceRef="StartEvent_1" targetRef="Activity_1lszwv5" />
+    <bpmn:sequenceFlow id="Flow_0bhpfjv" sourceRef="Activity_1lszwv5" targetRef="Activity_0ml3y92" />
+    <bpmn:sequenceFlow id="Flow_0lys0ey" sourceRef="Activity_0ml3y92" targetRef="Gateway_1o42uda" />
+    <bpmn:sequenceFlow id="Flow_0mey2xc" sourceRef="Gateway_1o42uda" targetRef="Activity_1rng4jh">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isApproved}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1f4wn8q" sourceRef="Gateway_1o42uda" targetRef="Activity_1iy91ya">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!isApproved}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0s5ccy1" sourceRef="Activity_1rng4jh" targetRef="Event_1i0z6i3" />
+    <bpmn:sequenceFlow id="Flow_0g42zhm" sourceRef="Event_1i0z6i3" targetRef="Event_0b3iyfw" />
+    <bpmn:sequenceFlow id="Flow_09k71p3" sourceRef="Activity_1iy91ya" targetRef="Event_1e5zsn4" />
+  </bpmn:process>
+  <bpmn:signal id="Signal_3oms1k5" name="signal_process_payment" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ProcessPaymentInvoice">
+      <bpmndi:BPMNShape id="Participant_17p7efa_di" bpmnElement="Participant_17p7efa" isHorizontal="true">
+        <dc:Bounds x="160" y="45" width="804" height="375" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1r5igmh_di" bpmnElement="Lane_1r5igmh" isHorizontal="true">
+        <dc:Bounds x="190" y="45" width="774" height="187" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_03t8byg_di" bpmnElement="Lane_03t8byg" isHorizontal="true">
+        <dc:Bounds x="190" y="232" width="774" height="188" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_091bjmu_di" bpmnElement="Flow_091bjmu">
+        <di:waypoint x="251" y="145" />
+        <di:waypoint x="306" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bhpfjv_di" bpmnElement="Flow_0bhpfjv">
+        <di:waypoint x="356" y="185" />
+        <di:waypoint x="356" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0lys0ey_di" bpmnElement="Flow_0lys0ey">
+        <di:waypoint x="406" y="298" />
+        <di:waypoint x="461" y="298" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mey2xc_di" bpmnElement="Flow_0mey2xc">
+        <di:waypoint x="511" y="298" />
+        <di:waypoint x="566" y="298" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1f4wn8q_di" bpmnElement="Flow_1f4wn8q">
+        <di:waypoint x="486" y="273" />
+        <di:waypoint x="486" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0s5ccy1_di" bpmnElement="Flow_0s5ccy1">
+        <di:waypoint x="666" y="298" />
+        <di:waypoint x="728" y="298" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0g42zhm_di" bpmnElement="Flow_0g42zhm">
+        <di:waypoint x="764" y="298" />
+        <di:waypoint x="828" y="298" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09k71p3_di" bpmnElement="Flow_09k71p3">
+        <di:waypoint x="536" y="145" />
+        <di:waypoint x="588" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="215" y="127" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1o42uda_di" bpmnElement="Gateway_1o42uda" isMarkerVisible="true">
+        <dc:Bounds x="461" y="273" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0b3iyfw_di" bpmnElement="Event_0b3iyfw">
+        <dc:Bounds x="828" y="280" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1e5zsn4_di" bpmnElement="Event_1e5zsn4">
+        <dc:Bounds x="588" y="127" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ju06c1_di" bpmnElement="Activity_1lszwv5">
+        <dc:Bounds x="306" y="105" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0bnyy11_di" bpmnElement="Activity_1iy91ya">
+        <dc:Bounds x="436" y="105" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0sjidoh_di" bpmnElement="Activity_0ml3y92">
+        <dc:Bounds x="306" y="258" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0c3gltu_di" bpmnElement="Activity_1rng4jh">
+        <dc:Bounds x="566" y="258" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0i6f56s_di" bpmnElement="Event_1i0z6i3">
+        <dc:Bounds x="728" y="280" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="707" y="323" width="83" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

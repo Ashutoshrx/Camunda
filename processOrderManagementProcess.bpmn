@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0avoiho" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.2.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="Process_Order_Managing_Boundary" name="Process Order Managing Boundary" isExecutable="true">
+    <bpmn:sequenceFlow id="Flow_0euujpr" sourceRef="order_recieved" targetRef="Activity_0fmk10u" />
+    <bpmn:sequenceFlow id="Flow_1x5uqqc" sourceRef="Activity_0fmk10u" targetRef="payment_recieved" />
+    <bpmn:sequenceFlow id="Flow_0wfk594" sourceRef="payment_recieved" targetRef="Activity_0eudfeg" />
+    <bpmn:endEvent id="Event_112bwgp">
+      <bpmn:incoming>Flow_0e8z740</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0e8z740" sourceRef="Activity_0o1lcg9" targetRef="Event_112bwgp" />
+    <bpmn:sequenceFlow id="Flow_0vj83yn" sourceRef="Cancel_Order" targetRef="Activity_04zu49b" />
+    <bpmn:endEvent id="Event_0uzpooo">
+      <bpmn:incoming>Flow_0bieh95</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0bieh95" sourceRef="Activity_04zu49b" targetRef="Event_0uzpooo" />
+    <bpmn:startEvent id="order_recieved" name="Order received">
+      <bpmn:outgoing>Flow_0euujpr</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0y0io8p" messageRef="Message_35j9aqs" />
+    </bpmn:startEvent>
+    <bpmn:intermediateCatchEvent id="payment_recieved" name="payment recieved">
+      <bpmn:incoming>Flow_1x5uqqc</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wfk594</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1a502we" messageRef="Message_130tcv6" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:userTask id="Activity_0eudfeg" name="Fullfill Order" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="customerName" label="Customer Name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="orderId" label="Order ID" type="long">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="productName" label="Product Name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="paymentAmount" label="Payment Amount" type="long">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0wfk594</bpmn:incoming>
+      <bpmn:outgoing>Flow_16c7jg3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:boundaryEvent id="Cancel_Order" name="Cancel Order" cancelActivity="false" attachedToRef="Activity_0eudfeg">
+      <bpmn:outgoing>Flow_0vj83yn</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_03wzy0l" messageRef="Message_2u476f9" />
+    </bpmn:boundaryEvent>
+    <bpmn:scriptTask id="Activity_04zu49b" name="Cancel Order" scriptFormat="groovy">
+      <bpmn:incoming>Flow_0vj83yn</bpmn:incoming>
+      <bpmn:outgoing>Flow_0bieh95</bpmn:outgoing>
+      <bpmn:script>println("Your order with order ID ${orderId} is being cancelled");</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Activity_0o1lcg9" name="Ship Order" scriptFormat="groovy">
+      <bpmn:incoming>Flow_16c7jg3</bpmn:incoming>
+      <bpmn:outgoing>Flow_0e8z740</bpmn:outgoing>
+      <bpmn:script>println("Your order with order ID ${orderId} has been shipped");</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Activity_0fmk10u" name="Send order confirmation" scriptFormat="groovy">
+      <bpmn:incoming>Flow_0euujpr</bpmn:incoming>
+      <bpmn:outgoing>Flow_1x5uqqc</bpmn:outgoing>
+      <bpmn:script>println("\nDear customer, we just received your order");</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_16c7jg3" sourceRef="Activity_0eudfeg" targetRef="Activity_0o1lcg9" />
+  </bpmn:process>
+  <bpmn:message id="Message_35j9aqs" name="order_received" />
+  <bpmn:message id="Message_130tcv6" name="payment_received" />
+  <bpmn:message id="Message_2u476f9" name="Message_cancel_order" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_Order_Managing_Boundary">
+      <bpmndi:BPMNEdge id="Flow_0bieh95_di" bpmnElement="Flow_0bieh95">
+        <di:waypoint x="750" y="240" />
+        <di:waypoint x="802" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vj83yn_di" bpmnElement="Flow_0vj83yn">
+        <di:waypoint x="580" y="175" />
+        <di:waypoint x="580" y="240" />
+        <di:waypoint x="650" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0e8z740_di" bpmnElement="Flow_0e8z740">
+        <di:waypoint x="800" y="117" />
+        <di:waypoint x="872" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wfk594_di" bpmnElement="Flow_0wfk594">
+        <di:waypoint x="468" y="117" />
+        <di:waypoint x="530" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1x5uqqc_di" bpmnElement="Flow_1x5uqqc">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="432" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0euujpr_di" bpmnElement="Flow_0euujpr">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16c7jg3_di" bpmnElement="Flow_16c7jg3">
+        <di:waypoint x="630" y="117" />
+        <di:waypoint x="700" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_112bwgp_di" bpmnElement="Event_112bwgp">
+        <dc:Bounds x="872" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0uzpooo_di" bpmnElement="Event_0uzpooo">
+        <dc:Bounds x="802" y="222" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1kmtqca_di" bpmnElement="order_recieved">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="162" y="142" width="73" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_067sj4q_di" bpmnElement="payment_recieved">
+        <dc:Bounds x="432" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="409" y="142" width="87" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0knbwsp_di" bpmnElement="Activity_0eudfeg">
+        <dc:Bounds x="530" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_06r3exw_di" bpmnElement="Activity_04zu49b">
+        <dc:Bounds x="650" y="200" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ydcwt1_di" bpmnElement="Activity_0o1lcg9">
+        <dc:Bounds x="700" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1y9ykez_di" bpmnElement="Activity_0fmk10u">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1eyxzy6_di" bpmnElement="Cancel_Order">
+        <dc:Bounds x="562" y="139" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="547" y="182" width="67" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

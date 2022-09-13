@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_130m7mw" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.2.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="Process_0y7uzpr" name="Tweet Rejected" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0osfh37</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0osfh37" sourceRef="StartEvent_1" targetRef="Activity_1xxky3r" />
+    <bpmn:sequenceFlow id="Flow_07c538a" sourceRef="Activity_1xxky3r" targetRef="Activity_0sxyz8n" />
+    <bpmn:subProcess id="Activity_0sxyz8n">
+      <bpmn:incoming>Flow_07c538a</bpmn:incoming>
+      <bpmn:outgoing>Flow_1k82439</bpmn:outgoing>
+      <bpmn:startEvent id="Event_1vhdchb">
+        <bpmn:outgoing>Flow_0yqi88w</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:sequenceFlow id="Flow_0yqi88w" sourceRef="Event_1vhdchb" targetRef="Activity_0dng85o" />
+      <bpmn:exclusiveGateway id="Gateway_0ppc5yg">
+        <bpmn:incoming>Flow_1qnogwl</bpmn:incoming>
+        <bpmn:outgoing>Flow_1mn801u</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0eiy2vv</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_1qnogwl" sourceRef="Activity_0dng85o" targetRef="Gateway_0ppc5yg" />
+      <bpmn:sequenceFlow id="Flow_1mn801u" name="Tweet approved" sourceRef="Gateway_0ppc5yg" targetRef="Activity_13tp4rr">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isTweetApproved}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_0eiy2vv" name="tweet rejected" sourceRef="Gateway_0ppc5yg" targetRef="Event_0yhszct">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!isTweetApproved}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:endEvent id="Event_01p1lji">
+        <bpmn:incoming>Flow_05qzr1m</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_05qzr1m" sourceRef="Activity_13tp4rr" targetRef="Event_01p1lji" />
+      <bpmn:endEvent id="Event_0yhszct" name="tweet not approved">
+        <bpmn:incoming>Flow_0eiy2vv</bpmn:incoming>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1dgdl18" errorRef="Error_0rlu9p1" />
+      </bpmn:endEvent>
+      <bpmn:userTask id="Activity_0dng85o" name="Review tweet" camunda:assignee="demo">
+        <bpmn:extensionElements>
+          <camunda:formData>
+            <camunda:formField id="tweet" label="Posted tweet" type="string">
+              <camunda:validation>
+                <camunda:constraint name="readonly" config="true" />
+              </camunda:validation>
+            </camunda:formField>
+            <camunda:formField id="isTweetApproved" label="Do you want to approve this tweet?" type="boolean">
+              <camunda:validation>
+                <camunda:constraint name="required" config="true" />
+              </camunda:validation>
+            </camunda:formField>
+            <camunda:formField id="comment" label="Any comments?" type="string" />
+          </camunda:formData>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0yqi88w</bpmn:incoming>
+        <bpmn:outgoing>Flow_1qnogwl</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:userTask id="Activity_13tp4rr" name="Post tweet" camunda:assignee="demo">
+        <bpmn:extensionElements>
+          <camunda:formData>
+            <camunda:formField id="tweet" label="Posted tweet" type="string">
+              <camunda:validation>
+                <camunda:constraint name="readonly" config="true" />
+              </camunda:validation>
+            </camunda:formField>
+          </camunda:formData>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_1mn801u</bpmn:incoming>
+        <bpmn:outgoing>Flow_05qzr1m</bpmn:outgoing>
+      </bpmn:userTask>
+    </bpmn:subProcess>
+    <bpmn:userTask id="Activity_1xxky3r" name="Submit Tweet" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="tweet" label="Enter your tweet" type="string">
+            <camunda:validation>
+              <camunda:constraint name="minlength" config="5" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0osfh37</bpmn:incoming>
+      <bpmn:outgoing>Flow_07c538a</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:boundaryEvent id="Event_0mq64ee" name="Error tweet rejected" attachedToRef="Activity_0sxyz8n">
+      <bpmn:outgoing>Flow_0jik51e</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0fywzmx" errorRef="Error_0rlu9p1" camunda:errorCodeVariable="Error_code_var" camunda:errorMessageVariable="Error_msg_var" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0jik51e" sourceRef="Event_0mq64ee" targetRef="Activity_1r1evzk" />
+    <bpmn:endEvent id="Event_1bua0oc">
+      <bpmn:incoming>Flow_1dmftka</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1dmftka" sourceRef="Activity_1r1evzk" targetRef="Event_1bua0oc" />
+    <bpmn:sequenceFlow id="Flow_1k82439" sourceRef="Activity_0sxyz8n" targetRef="Activity_1gtw4yn" />
+    <bpmn:endEvent id="Event_0wf2lbu" name="Process Error">
+      <bpmn:incoming>Flow_1p82w4n</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1p82w4n" sourceRef="Activity_1gtw4yn" targetRef="Event_0wf2lbu" />
+    <bpmn:scriptTask id="Activity_1r1evzk" name="Send notification-Tweet rejected" scriptFormat="groovy">
+      <bpmn:incoming>Flow_0jik51e</bpmn:incoming>
+      <bpmn:outgoing>Flow_1dmftka</bpmn:outgoing>
+      <bpmn:script>println("\n Sorry, your tweet has been rejected due to ${comment}");
+println("Error code var:${Error_code_var}");
+println("Error message :${Error_msg_var}");</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Activity_1gtw4yn" name="Send notification-tweet posted" scriptFormat="groovy">
+      <bpmn:incoming>Flow_1k82439</bpmn:incoming>
+      <bpmn:outgoing>Flow_1p82w4n</bpmn:outgoing>
+      <bpmn:script>println("Your tweet -&gt; ${tweet} has been posted,\n Thankyou.");</bpmn:script>
+    </bpmn:scriptTask>
+  </bpmn:process>
+  <bpmn:error id="Error_0rlu9p1" name="error_tweet_rejected" errorCode="error_tweet_rejected" camunda:errorMessage="${comment}" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0y7uzpr">
+      <bpmndi:BPMNEdge id="Flow_1p82w4n_di" bpmnElement="Flow_1p82w4n">
+        <di:waypoint x="1170" y="225" />
+        <di:waypoint x="1212" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1k82439_di" bpmnElement="Flow_1k82439">
+        <di:waypoint x="1030" y="225" />
+        <di:waypoint x="1070" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dmftka_di" bpmnElement="Flow_1dmftka">
+        <di:waypoint x="840" y="460" />
+        <di:waypoint x="892" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0jik51e_di" bpmnElement="Flow_0jik51e">
+        <di:waypoint x="670" y="398" />
+        <di:waypoint x="670" y="460" />
+        <di:waypoint x="740" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07c538a_di" bpmnElement="Flow_07c538a">
+        <di:waypoint x="320" y="170" />
+        <di:waypoint x="360" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0osfh37_di" bpmnElement="Flow_0osfh37">
+        <di:waypoint x="158" y="170" />
+        <di:waypoint x="220" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="122" y="152" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0f7lema_di" bpmnElement="Activity_1r1evzk">
+        <dc:Bounds x="740" y="420" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0drypw1_di" bpmnElement="Activity_1gtw4yn">
+        <dc:Bounds x="1070" y="185" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1sb32lx_di" bpmnElement="Activity_0sxyz8n" isExpanded="true">
+        <dc:Bounds x="360" y="70" width="670" height="310" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_05qzr1m_di" bpmnElement="Flow_05qzr1m">
+        <di:waypoint x="860" y="170" />
+        <di:waypoint x="892" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0eiy2vv_di" bpmnElement="Flow_0eiy2vv">
+        <di:waypoint x="650" y="195" />
+        <di:waypoint x="650" y="280" />
+        <di:waypoint x="762" y="280" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="633" y="293" width="68" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mn801u_di" bpmnElement="Flow_1mn801u">
+        <di:waypoint x="675" y="170" />
+        <di:waypoint x="760" y="170" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="680" y="152" width="79" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qnogwl_di" bpmnElement="Flow_1qnogwl">
+        <di:waypoint x="570" y="170" />
+        <di:waypoint x="625" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0yqi88w_di" bpmnElement="Flow_0yqi88w">
+        <di:waypoint x="418" y="170" />
+        <di:waypoint x="470" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1vhdchb_di" bpmnElement="Event_1vhdchb">
+        <dc:Bounds x="381.6666666666667" y="152" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0ppc5yg_di" bpmnElement="Gateway_0ppc5yg" isMarkerVisible="true">
+        <dc:Bounds x="625" y="145" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_01p1lji_di" bpmnElement="Event_01p1lji">
+        <dc:Bounds x="892" y="152" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_103272a_di" bpmnElement="Activity_0dng85o">
+        <dc:Bounds x="470" y="130" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1619drm_di" bpmnElement="Activity_13tp4rr">
+        <dc:Bounds x="760" y="130" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1yv8yqy_di" bpmnElement="Event_0yhszct">
+        <dc:Bounds x="762" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="758" y="305" width="46" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1h649yv_di" bpmnElement="Activity_1xxky3r">
+        <dc:Bounds x="220" y="130" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1bua0oc_di" bpmnElement="Event_1bua0oc">
+        <dc:Bounds x="892" y="442" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0wf2lbu_di" bpmnElement="Event_0wf2lbu">
+        <dc:Bounds x="1212" y="207" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1196" y="250" width="69" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0q6jm4r_di" bpmnElement="Event_0mq64ee">
+        <dc:Bounds x="652" y="362" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="643" y="405" width="55" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

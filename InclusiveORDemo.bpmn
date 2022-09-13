@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0y8z2m8" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.2.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="Process_1qh55s3" name="Inclusinve OR" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Apply For Job">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="firstName" label="Enter FirstName" type="string">
+            <camunda:validation>
+              <camunda:constraint name="required" config="required" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="lastName" label="Enter Last Name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="required" config="required" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="skillSet" label="Enter your Skill Details" type="string">
+            <camunda:validation>
+              <camunda:constraint name="required" config="required" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="exp" label="Enter your experience(in years)" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_0mfpnal</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0mfpnal" sourceRef="StartEvent_1" targetRef="Activity_1ov0ezg" />
+    <bpmn:sequenceFlow id="Flow_0a4zatq" sourceRef="Activity_1ov0ezg" targetRef="Gateway_1uzlxu7" />
+    <bpmn:sequenceFlow id="Flow_02rnmqx" name="Exp&#62;=0" sourceRef="Gateway_1uzlxu7" targetRef="Activity_1i76rjl">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${exp&gt;=0}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_000cfny" name="Exp&#62;=4" sourceRef="Gateway_1uzlxu7" targetRef="Activity_1cc78iw">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${exp&gt;=4}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_03944xg" sourceRef="Activity_1cc78iw" targetRef="Gateway_0gjw2oc" />
+    <bpmn:sequenceFlow id="Flow_02rsvro" sourceRef="Activity_1i76rjl" targetRef="Gateway_0gjw2oc" />
+    <bpmn:sequenceFlow id="Flow_0rm8tsw" sourceRef="Gateway_0gjw2oc" targetRef="Activity_0t2hsyy" />
+    <bpmn:endEvent id="Event_12s4zin">
+      <bpmn:incoming>Flow_1v8jdot</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1v8jdot" sourceRef="Activity_0t2hsyy" targetRef="Event_12s4zin" />
+    <bpmn:userTask id="Activity_1ov0ezg" name="HR Desk" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="firstName" label="FirstName" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="lastName" label="Last Name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="skillSet" label="Skill Set" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="exp" label="Experience (in years)" type="long">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0mfpnal</bpmn:incoming>
+      <bpmn:outgoing>Flow_0a4zatq</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_1cc78iw" name="Technical Interview-2" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="firstName" label="FirstName" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="lastName" label="Last Name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="skillSet" label="Skill Set" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="exp" label="Exprience in years" type="long">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="t2Score" label="Enter your score" type="long">
+            <camunda:validation>
+              <camunda:constraint name="max" config="11" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_000cfny</bpmn:incoming>
+      <bpmn:outgoing>Flow_03944xg</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_1i76rjl" name="Technical Interview-1" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="firstName" label="First Name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="lastName" label="Last Name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="skillSet" label="Skill Set" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="exp" label="Experience in years" type="long">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="t1Score" label="Enter your T1 Score" type="long">
+            <camunda:validation>
+              <camunda:constraint name="max" config="11" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_02rnmqx</bpmn:incoming>
+      <bpmn:outgoing>Flow_02rsvro</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_0t2hsyy" name="Manager&#39;s Desk" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="firstName" label="FirstName" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="lastName" label="Last Name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="t1Score" label="Interview 1 Score" type="long">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="t2Score" label="Interview 2 Score" type="long">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="t3Score" label="Technical Interview 3" type="long">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="isApprove" label="Approve" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0rm8tsw</bpmn:incoming>
+      <bpmn:outgoing>Flow_1v8jdot</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:inclusiveGateway id="Gateway_1uzlxu7">
+      <bpmn:incoming>Flow_0a4zatq</bpmn:incoming>
+      <bpmn:outgoing>Flow_02rnmqx</bpmn:outgoing>
+      <bpmn:outgoing>Flow_000cfny</bpmn:outgoing>
+      <bpmn:outgoing>Flow_16kidjb</bpmn:outgoing>
+    </bpmn:inclusiveGateway>
+    <bpmn:inclusiveGateway id="Gateway_0gjw2oc">
+      <bpmn:incoming>Flow_03944xg</bpmn:incoming>
+      <bpmn:incoming>Flow_02rsvro</bpmn:incoming>
+      <bpmn:incoming>Flow_1t13e9w</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rm8tsw</bpmn:outgoing>
+    </bpmn:inclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_16kidjb" name="Exp&#62;=8" sourceRef="Gateway_1uzlxu7" targetRef="Activity_14k3rsw">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${exp&gt;=8}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1t13e9w" sourceRef="Activity_14k3rsw" targetRef="Gateway_0gjw2oc" />
+    <bpmn:userTask id="Activity_14k3rsw" name="Technical Interview-3" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="firstName" label="First Name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="lastName" label="Last Name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="skillSet" label="Skill Set" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="exp" label="Experience in years" type="long">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="t3Score" label="Enter your Inteview 3 Score" type="long">
+            <camunda:validation>
+              <camunda:constraint name="max" config="11" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_16kidjb</bpmn:incoming>
+      <bpmn:outgoing>Flow_1t13e9w</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1qh55s3">
+      <bpmndi:BPMNEdge id="Flow_1t13e9w_di" bpmnElement="Flow_1t13e9w">
+        <di:waypoint x="630" y="370" />
+        <di:waypoint x="700" y="370" />
+        <di:waypoint x="700" y="262" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16kidjb_di" bpmnElement="Flow_16kidjb">
+        <di:waypoint x="450" y="262" />
+        <di:waypoint x="450" y="370" />
+        <di:waypoint x="530" y="370" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="448" y="313" width="38" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1v8jdot_di" bpmnElement="Flow_1v8jdot">
+        <di:waypoint x="880" y="237" />
+        <di:waypoint x="972" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rm8tsw_di" bpmnElement="Flow_0rm8tsw">
+        <di:waypoint x="725" y="237" />
+        <di:waypoint x="780" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02rsvro_di" bpmnElement="Flow_02rsvro">
+        <di:waypoint x="630" y="120" />
+        <di:waypoint x="700" y="120" />
+        <di:waypoint x="700" y="212" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03944xg_di" bpmnElement="Flow_03944xg">
+        <di:waypoint x="630" y="237" />
+        <di:waypoint x="675" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_000cfny_di" bpmnElement="Flow_000cfny">
+        <di:waypoint x="475" y="237" />
+        <di:waypoint x="530" y="237" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="485" y="219" width="38" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02rnmqx_di" bpmnElement="Flow_02rnmqx">
+        <di:waypoint x="450" y="212" />
+        <di:waypoint x="450" y="120" />
+        <di:waypoint x="530" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="447" y="163" width="38" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0a4zatq_di" bpmnElement="Flow_0a4zatq">
+        <di:waypoint x="370" y="237" />
+        <di:waypoint x="425" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mfpnal_di" bpmnElement="Flow_0mfpnal">
+        <di:waypoint x="215" y="237" />
+        <di:waypoint x="270" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="219" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="163" y="262" width="68" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1wbw8rr_di" bpmnElement="Activity_1ov0ezg">
+        <dc:Bounds x="270" y="197" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kdcb7h_di" bpmnElement="Activity_1cc78iw">
+        <dc:Bounds x="530" y="197" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0k2ts8c_di" bpmnElement="Activity_1i76rjl">
+        <dc:Bounds x="530" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0drlk71_di" bpmnElement="Activity_0t2hsyy">
+        <dc:Bounds x="780" y="197" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1gimyp1_di" bpmnElement="Gateway_1uzlxu7">
+        <dc:Bounds x="425" y="212" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_18e2113_di" bpmnElement="Gateway_0gjw2oc">
+        <dc:Bounds x="675" y="212" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_03hvlih_di" bpmnElement="Activity_14k3rsw">
+        <dc:Bounds x="530" y="330" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_12s4zin_di" bpmnElement="Event_12s4zin">
+        <dc:Bounds x="972" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
